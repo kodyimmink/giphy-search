@@ -1,29 +1,20 @@
 import React from 'react';
+
+//REDUX
 import { connect } from 'react-redux';
+import { actions } from '../redux/actions';
 
-//ACTIONS
-import {searchAction} from '../actions/searchAction';
-import {setImagesAction} from '../actions/setImagesAction';
+//API
+import { searchGiphyAPI } from '../api';
 
-
-import {searchGiphyAPI} from '../api';
-
-const mapStateToProps = state => ({
-    ...state
-   })
-
-const mapDispatchToProps = dispatch => ({
-    searchAction: () => dispatch(searchAction()),
-    setImagesAction: () => dispatch(setImagesAction())
-   })
-
-function cleanData(jsonData){
-    let imagesArray = [];
-    jsonData.data.forEach(function(item, index){
-        imagesArray.push(jsonData.data[index].images.original.webp)
-    })
-    return imagesArray;
-}
+//return promise?
+// function cleanData(jsonData){
+//     let imagesArray = [];
+//     jsonData.data.forEach(function(item, index){
+//         imagesArray.push(jsonData.data[index].images.original.webp)
+//     })
+//     return imagesArray;
+// }
 
 class Search extends React.Component {
     constructor(){
@@ -33,18 +24,17 @@ class Search extends React.Component {
         this.handleSearchQuery = this.handleSearchQuery.bind(this);
     }
 
-    handleSearchChange = (event) => {
-
-        //THE PROBLEM IS RIGHT HERE.
-        //THIS DOES NOT SET THE SEARCH PARAMETER TO THE GLOBAL STATE.
-        this.props.searchAction(event.target.value);
+    handleSearchChange(event){
+        this.props.onSetSearchTerm(event.target.value);
     }
 
     handleSearchQuery(e){
         e.preventDefault();
-        searchGiphyAPI(this.props.searchParameter)
-        .then(data => cleanData(data))
-        .then(images => setImagesAction(images));
+        searchGiphyAPI(this.props.searchTerm)
+
+        // .then(data => cleanData(data))
+
+        .then(imagesArray => this.props.onSetImagesArray(imagesArray))
     }
 
     render(){
@@ -53,13 +43,34 @@ class Search extends React.Component {
             
             <form onSubmit={this.handleSearchQuery}>
                 <h3>Search</h3>
-                <input type="text" name='searchInput' className="searchBox" placeholder='Search for a gif brah' value={this.props.searchParameter} onChange={this.handleSearchChange}></input>
-                <button type="submit" className="button">Search</button>
+                <input type="text" placeholder='Search for a gif brah' onChange={this.handleSearchChange}></input>
+                <button type="submit">Search</button>
             </form>
             
         </div>
         )
     }   
+}
+
+
+//REDUX STATE MAP
+function mapStateToProps(state){
+    return {
+        searchTerm: state.searchTerm,
+        imagesArray: state.imagesArray
+    };
+}
+
+//REDUX ACTIONS MAP
+function mapDispatchToProps(dispatch){
+    return{
+        onSetSearchTerm(searchTerm){
+            dispatch(actions.setSearchTerm(searchTerm));
+        },
+        onSetImagesArray(imagesArray){
+            dispatch(actions.setImagesArray(imagesArray));
+        }
+    }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);
