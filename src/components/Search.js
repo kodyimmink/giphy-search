@@ -1,4 +1,6 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 //REDUX
 import { connect } from 'react-redux';
@@ -38,16 +40,15 @@ class Search extends React.Component {
     }
 
     render(){
-        return(        
-        <div>
-            
-            <form onSubmit={this.handleSearchQuery}>
-                <h3>Search</h3>
-                <input type="text" placeholder='Search for a gif brah' onChange={this.handleSearchChange}></input>
-                <button type="submit">Search</button>
-            </form>
-            
-        </div>
+        return(
+            <div className='wrap'>
+                <form className='search' onSubmit={this.handleSearchQuery}>
+                    <input type="text" className='searchTerm' placeholder='Search for a gif brah' onChange={this.handleSearchChange}></input>
+                    <button type="submit" className='searchButton'>
+                        <FontAwesomeIcon icon={ faSearch} /> 
+                    </button>
+                </form>
+            </div>
         )
     }   
 }
@@ -75,3 +76,11 @@ function mapDispatchToProps(dispatch){
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);
 
+{/* <div class="wrap">
+   <div class="search">
+      <input type="text" class="searchTerm" placeholder="What are you looking for?">
+      <button type="submit" class="searchButton">
+        <i class="fa fa-search"></i>
+     </button>
+   </div>
+</div> */}

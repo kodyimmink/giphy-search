@@ -14,12 +14,12 @@ class ImagesContainer extends React.Component {
     
     createImageElements(){
         return (
-            <div>
+            <div className='imageContainer'>
                 {
                     this.props.imagesArray.data.map( 
                         image => { return (
                         <div key={image.id}>
-                            <img width={300} height={300} src={image.images.original.webp} /> 
+                            <img className='image' width={300} height={300} src={image.images.original.url} /> 
                         </div>
                         )
                         }
